@@ -1,13 +1,21 @@
 package com.mastek.training.hrapp.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -36,7 +44,26 @@ public class Employee implements Serializable { //manage serialization of Object
 	@Value("100.0")
 	private double salary;
 
+	private Set<Project> assignments = new HashSet<>();
+	//@ManytoMany : configuring the association for both the entities
+	//@Jointable: Provides all the configuration for the third table
+	//name: name of the Join table
+	//joinColumns: Foreign Key column name for current class
+	//inverseJoinColumns: Foreign key Column for other class
 	
+	
+@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+@JoinTable(name="JPA_ASSIGNMENTS",joinColumns=@JoinColumn(name="FK_EMPNO"),inverseJoinColumns=@JoinColumn(name="FK_PROJECTID"))
+
+
+public Set<Project> getAssignments() {
+		return assignments;
+	}
+	public void setAssignments(Set<Project> assignments) {
+		this.assignments = assignments;
+	}
+	//@ManytoOne Each employee belongs to one department
+	private Department currentDepartment;
 	
 	
 	
@@ -70,6 +97,16 @@ public class Employee implements Serializable { //manage serialization of Object
 
 	public void setSalary(double salary) { //JPA will apply default configuration
 		this.salary = salary;
+	}
+	//Many to one associating
+	
+	@ManyToOne
+	@JoinColumn(name="FK_DepartmentID")
+	public Department getCurrentDepartment() {
+		return currentDepartment;
+	}
+	public void setCurrentDepartment(Department currentDepartment) {
+		this.currentDepartment = currentDepartment;
 	}
 	
 
