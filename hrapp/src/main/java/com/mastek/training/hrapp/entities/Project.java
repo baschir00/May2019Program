@@ -12,18 +12,23 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.ws.rs.FormParam;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 @Scope("prototype") // one copy for each test case
 @Entity //declares the class as an Enitity
 @Table (name="JPA_PROJECT") //Declaring the table name for the class
 //@NamedQueries({@NamedQuery(name="Project.findByCustomer",query="select p from Project p where p.cutstomerName = :cus")})
 public class Project implements Serializable{
+	
 	private int projectId;
+	@FormParam("name")
 	private String projectname;
+	@FormParam("customer")
 	private String customerName;
 	
 	
@@ -66,6 +71,7 @@ public class Project implements Serializable{
 	//mappedBy: check the configuration for Many to Many association
 	//in Employee class getAssignments() method
 	@ManyToMany(mappedBy="assignments")	
+	@XmlTransient
 	public Set<Employee> getTeam() {
 		return team;
 	}

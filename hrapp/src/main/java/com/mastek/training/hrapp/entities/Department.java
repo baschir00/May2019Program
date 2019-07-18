@@ -15,18 +15,24 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.ws.rs.FormParam;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-@Component
+//Component
 @Scope("prototype") // one copy for each test case
 @Entity //declares the class as an Enitity
 @Table (name="JPA_DEPARTMENT") //Declaring the table name for the class
 @NamedQueries({@NamedQuery(name="Department.findByLocation",query="select d from Department d where d.location = :loc")})
+@XmlRootElement
 public class Department implements Serializable{
 	
 	private int depno;
+	@FormParam("name")
 	private String departmentname;
+	@FormParam("location") 
 	private String location;
 	//OnetoMany: One department has many employees
     //@OneToMany: used on the get method of set to configure association
@@ -44,6 +50,7 @@ public class Department implements Serializable{
 	
 	
 	@OneToMany(fetch=FetchType.LAZY,cascade=CascadeType.ALL,mappedBy="currentDepartment")
+	@XmlTransient
 	public Set<Employee> getMembers() {
 		return members;
 	}
